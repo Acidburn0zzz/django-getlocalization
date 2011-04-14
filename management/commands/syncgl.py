@@ -53,21 +53,21 @@ class Command(BaseCommand):
                     password=GL_PASSWORD,
                     url=GL_PROJECT_URL)
 
-        try:
-            fh.retrieve_languages()            
-        except urllib2.HTTPError, e:
-            sys.stdout("ERROR: Issue with the remote server. %s" % e.message)
-
-        except Exception, e:
-            sys.stdout.write(e.message)
-            sys.exit()
-
         # retrieve the project master files
         success, message =  fh.retrieve_masterfiles()
         if not success:
             sys.stdout.write("ERROR: %s\n" % message)
             sys.exit(1)
 
+        try:
+            fh.retrieve_languages()            
+        except urllib2.HTTPError, e:
+            sys.stdout.write("ERROR: Issue with the remote server. Status code %s" % e.code)
+
+        except Exception, e:
+            sys.stdout.write(e.message)
+            sys.exit()
+        
         for filepath in fc.results:
             if fh.has_master(filepath):
                 sys.stdout.write("Updating localization file %s" % filepath)
@@ -84,6 +84,9 @@ class Command(BaseCommand):
         # download the file in different language
         for lang in fh.languages:
             for masterfile in fh.master_files:
+                if not masterfile.endswith('.po'):
+                    continue
+                    
                 sys.stdout.write("Downloading %s for %s" % (masterfile, lang[1]))
                 
                 success, message = fh.download(masterfile, lang[0])
