@@ -1,22 +1,25 @@
-Django-GetLocalization Module User Manual
+Django-GetLocalization Module Quick Guide
 
 
-Here are the steps you need to take the Django-GetLocalization Module into use.
+Here are the five steps you need to complete to take the Django-GetLocalization Module into use.
 
-1) Download the whole zip file, unzip it and rename it to django-getlocalization to the root folder of your project.
+1) Download the whole zip file and unzip it
 
-2) Register a new project at http://www.getlocalization.com.
+2) Open the unzipped folder and run "python setup.py install"
 
-3) Add the following configuration variables in project settings.py file:
+3) Register a new project at http://www.getlocalization.com.
+
+4) Add the following configuration variables in project settings.py file:
 
 GL_USERNAME : Get Localization username
 GL_PASSWORD : Get Localization password
-GL_PROJECT_URL : Project URL on GetLocalization, the common form is http://getlocalization.com/XXX/ where XXX is the project name
-GL_MASTER_CODE (OPTIONAL) : The IANA code for master language, default is ‘en’
+GL_PROJECT_URL : Project URL on GetLocalization, the common form is "http://getlocalization.com/XXX/" where XXX is the project name
+GL_MASTER_CODE (OPTIONAL) : The IANA code for master language, default is "en"
 
-4) Add "django-getlocalization" into your installed apps
+Add "glsync" into your installed apps
+
 5) Run "python manage.py syncgl".
 
-The command finds all localization files (.po files) in LC_MESSAGES folders in all project sub-folders and uploads them directly to Get Localization. Then fetches all translation files from Get Localization and automatically updates the language folders.
+This command finds all localization files (.po files) in LC_MESSAGES folders in all project sub-folders and uploads them directly to Get Localization. Then it fetches all translation files from Get Localization and automatically updates the language folders.
 
-Finally, the command automatically runs "django-admin.py compilemessages" to generate the message files ready to be used.
+Finally, the command automatically runs ‘django-admin.py compilemessages’ to generate the message files ready to be used.
