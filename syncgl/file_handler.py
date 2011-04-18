@@ -165,7 +165,7 @@ class FileHandler():
         """
         request = urllib2.Request(link)
         data = urllib2.urlopen(request).read()
-
+        
         path = os.path.join(self.basepath, filepath)
         f = open(path, "wb+")
         f.write(data)
@@ -186,7 +186,7 @@ class FileHandler():
         target_filepath = target_filepath.replace('\\', '/')
         folders = target_filepath.split('/')
         if len(folders) == 1: # if no slash in the filepath, no need to process
-            return
+            return target_filepath
 
         # create the missing folder
         basepath = self.basepath
@@ -202,6 +202,10 @@ class FileHandler():
         Download the file in target language of a component.
         If that such language does not exist then create a new one
         """
+        # in case the local file does not exist, ignore this case
+        if not os.path.exists(filepath):
+            return False, "Ignore: Local file does not exist"
+
         baseurl = self.CONFIGS.get('url')
         if baseurl.endswith('/'):
             link =  baseurl + 'api/translations/' + langcode
@@ -218,10 +222,11 @@ class FileHandler():
         try:
             handle = urllib2.urlopen(request)
             data = simplejson.loads(handle.read())
-
+            
             if data.get('success') == 1:
                 generated_link = data.get('link')
                 lang_filepath = self.get_target_filepath(filepath, langcode)
+                
                 self.save_file_from_link(generated_link, lang_filepath)
 
                 return True, 'Success'
@@ -230,10 +235,13 @@ class FileHandler():
                 return False, data.get("error")
 
         except urllib2.URLError, e:
-            sys.stdout.write("Issue with remote server. Status code: %s\n" % e.code)
-
+            error = "Issue with remote server. Status code: %s\n" % e.code
+            return False, error
+            
         except Exception, e:
-            sys.stdout.write("Unexpected error: %s" % e.message)
+            print traceback.format_exc()
+            error = "Unexpected error: %s" % e.message
+            return False, error
 
 
 
