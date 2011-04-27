@@ -1,7 +1,20 @@
-Django-Getlocalization is a Django module to help synchronizing the localization files between Django applications 
-and Get Localization, the localization platform for developers. Synchronization will be simpler and easier than ever before, 
-as you manage localization conveniently from the command line. Without any hassle, and no emails needing to be sent.
-Django-GetLocalization Module Quick Guide
+Django boosted with Get Localization makes it easy to develop multilingual websites. 
+
+=== What is Get Localization? ===
+
+It's easiest to think Get Localization as a version control for translation files. Like Git or SVN, files are always up-to-date in the server. When files are updated to service, translators have an access to browser based easy-to-use editor. They don't have to edit the actual resource files and worry about the syntax but just easily use the editor in their browser. When they've finished the translation, you can just download the finished translation files manually using the browser or automatically using the API. 
+
+The translators can be professionals or members of your user community, you decide what is best for your product. Using Get Localization for crowdsourced translation is totally free.
+
+=== Problem it solves? ===
+
+You know how difficult it's to develop a multilingual web site? It's not just about adding features, you need to make sure that translations are up-to-date when you release. Django-GetLocalization module makes it easy to manage these translations while you develop. Like you commit your source code to SCM/version management system, you should commit your translation files to Get Localization. This allows translators to work simultaneously with developers. 
+
+=== How it works? ===
+
+You just execute new Django manage.py command called "syncgl", it will automatically search your po files and update them to the service. Also all the translated files are automatically downloaded, placed to correct folders and compiled. When you do the sync, all your translators will get automatic notification of new strings and can start translating straightaway in Get Localization's browser based editor. 
+
+=== How to get started? ===
 
 Please complete the following simple steps to take the Django-GetLocalization Module into use:
 
