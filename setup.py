@@ -12,7 +12,7 @@ setup(
     version='0.1',
     author='Get Localization',
     author_email='support@getlocalization.zendesk.com',
-    url='http://github.com/pmuilu/django-getlocalization',
+    url='http://github.com/getlocalization/django-getlocalization',
     description = 'Synchronize localization files with Get Localization service',
     packages=find_packages(exclude="example_project"),
     zip_safe=False,
