@@ -10,8 +10,8 @@ except ImportError:
 setup(
     name='django-getlocalization',
     version='0.1',
-    author='Phong Le',
-    author_email='phong.le@synble.com',
+    author='Get Localization',
+    author_email='support@getlocalization.zendesk.com',
     url='http://github.com/pmuilu/django-getlocalization',
     description = 'Synchronize localization files with Get Localization service',
     packages=find_packages(exclude="example_project"),
