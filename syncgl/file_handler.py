@@ -31,6 +31,7 @@ import urllib2
 import base64
 import os.path
 import sys
+import urllib
 from multipart_form import MultiPartForm
 try:
         import simplejson
@@ -132,7 +133,10 @@ class FileHandler():
         sLink = "http://%s/api/languages/?type=json&product=%s" % (domain, project)
         req = urllib2.Request(sLink)
         handle = urllib2.urlopen(req)
-        self.languages = simplejson.loads(handle.read())
+        
+        data = handle.read()
+        
+        self.languages = simplejson.loads(data)
 
 
     def has_master(self, filepath):
@@ -148,6 +152,8 @@ class FileHandler():
         """
         Upload the file with filepath (relative path) and retun the result
         """
+
+    
         # check if this file is for updating or creating new
         if self.has_master(filepath):
             url = self.get_update_link()
@@ -162,7 +168,8 @@ class FileHandler():
         # build form
         file = os.path.join(self.basepath, filepath)
         fhandle = open(file)
-        form = MultiPartForm()        
+        form = MultiPartForm()  
+              
         form.addFile('file', filepath, fhandle)
         form.addField('name', filepath)
 
@@ -192,6 +199,8 @@ class FileHandler():
         If the same file does exist, this will overwrite it
         """
         request = urllib2.Request(link)
+        self.set_basicauth(request)
+       
         data = urllib2.urlopen(request).read()
         
         path = os.path.join(self.basepath, filepath)
@@ -235,43 +244,20 @@ class FileHandler():
             return False, "Ignore: Local file does not exist"
 
         baseurl = self.CONFIGS.get('url')
-        if baseurl.endswith('/'):
-            link =  baseurl + 'api/translations/' + langcode
-        else:
-            link =  baseurl + '/api/translations/' + langcode
-
-        request = urllib2.Request(link)
-        self.set_basicauth(request)
-        form = MultiPartForm()        
-        form.addField('name', filepath)
-        request.add_header("Content-Type", form.getContentType());
-        request.add_data(str(form))
-
+        
+        if not baseurl.endswith('/'):
+            baseurl += '/'
+            
+        link =  baseurl + 'api/translations/file/' + filepath + "/" + langcode + "/"
+        
+        lang_filepath = self.get_target_filepath(filepath, langcode)
         try:
-            handle = urllib2.urlopen(request)
-            data = simplejson.loads(handle.read())
-            
-            if data.get('success') == 1:
-                generated_link = data.get('link')
-                lang_filepath = self.get_target_filepath(filepath, langcode)
-                
-                self.save_file_from_link(generated_link, lang_filepath)
+            self.save_file_from_link(link, lang_filepath)
+            return True
+        except:
+            return False
 
-                return True, 'Success'
-
-            else:
-                return False, data.get("error")
-
-        except urllib2.URLError, e:
-            error = "Issue with remote server. Status code: %s\n" % e.code
-            return False, error
-            
-        except Exception, e:
-            print traceback.format_exc()
-            error = "Unexpected error: %s" % e.message
-            return False, error
-
-
+        
 
 
 
